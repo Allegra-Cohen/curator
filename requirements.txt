@@ -1,0 +1,47 @@
+# Scraper
+requests
+trafilatura
+beautifulsoup4
+lxml
+# PDFs: /Info metadata, per-page text, and the page count that tells a scan
+# (no text layer) from a born-digital paper
+pypdf
+# PDFs, body text only: pypdf's per-line text carries no marker between a
+# paragraph's wrapped lines and the next paragraph. PyMuPDF reports each
+# line's real position on the page, which reader.py uses to reconstruct
+# actual paragraphs (and to read a two-column layout in the right order).
+pymupdf
+
+# Graph storage layer
+psycopg[binary]
+pydantic
+
+# Curator API
+fastapi
+uvicorn[standard]
+
+# Scout: feed sources (RSS/Atom in the wild is messy enough that hand-rolling it
+# on xml.etree is a bad trade)
+feedparser
+
+# Scout LLM relevance filter
+anthropic
+
+# Environment config
+python-dotenv
+
+# Queue report, semantic section only (queue_report.py SEMANTIC GROUPS).
+# Optional: `--no-embeddings` writes the report without any of these, and
+# `default_embedder` returns None rather than failing when they are absent. Split out
+# because torch is ~2GB and nothing else in the project wants it.
+#
+# The model is nomic-embed-text-v1.5, downloaded once (~550MB) and PINNED to a
+# revision -- see embeddings.py, which is the only file that knows it exists.
+# `einops` is imported by the model's own remote code, not by us.
+transformers
+torch
+einops
+numpy
+
+# Tests
+pytest

@@ -1,0 +1,1694 @@
+/* =========================================================================
+   DESIGN TOKENS  (Phase 0 — values are pixel-identical to the pre-token hex).
+   Restyle the app by editing values HERE; call sites reference var(--name).
+   Groups: neutrals / accent / indigo-violet / amber / green / rose / warm.
+   The `warm-*` group is the Sources window's separate gray ramp — a known
+   divergence from the cool slate ramp, kept as tokens so Phase 1 can retire it.
+   ========================================================================= */
+:root {
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+  /* radius scale (documented; call sites not yet migrated) */
+  --radius-sm: 4px;  --radius: 6px;  --radius-lg: 8px;  --radius-pill: 999px;
+
+  /* TYPE SCALE — five steps, and nothing else. Every font-size in this file is
+     one of these; a bare px value is a bug. The old 9/10/13/15px one-offs were
+     folded in (13px split by role: chrome went to --text-sm, prose and text
+     inputs to --text-base).
+       xs   quiet chrome: counts, column labels, grid cells, hints
+       sm   secondary text: metadata, dropdown rows, banners, table headers
+       base body — inherited from <body>, so declare it only to override
+       lg   panel titles (h3, the concept-name input)
+       xl   window titles (h2) and article headings */
+  --text-xs: 11px;  --text-sm: 12px;  --text-base: 14px;
+  --text-lg: 16px;  --text-xl: 20px;
+  /* NOT a step in the ramp. Uppercase + letter-spaced micro-labels only
+     (.type-badge, .kind-tag, .vis-badge, .entity-group-label, .chip-note):
+     caps at 10px read about the size of lowercase at 12px, so these sit
+     outside the scale rather than under --text-xs. */
+  --text-badge: 10px;
+  /* Tracking for those same caps labels. The two header decks (.scope-btn,
+     .view-toggle) run wider at .08em — deliberate, they're a distinct tier. */
+  --track-caps: .04em;
+
+  --ink: #0f172a;
+  --ink-2: #334155;
+  --ink-3: #475569;
+  --ink-muted: #64748b;
+  --ink-faint: #94a3b8;
+  --border-strong: #74BD9F;
+  --border: #74BD9F;
+  --border-faint: #daede5;
+  --bg-subtle: #f1f5f9;
+  --bg: #f8fafc;
+  --surface: #e4eef5;
+  /* What a polygon lays down when the curator has given it no colour, and what every
+     polygon lays down UNDER its own colour when it has one — see the pencil hatch in
+     PolygonCanvas.tsx. Opaque, because it is what clears whatever shape it sits inside. */
+  --pg-paper: #fff;
+  --accent: #2563eb;
+  --accent-strong: #1d4ed8;
+  --accent-deep: #1e40af;
+  --accent-bg: #eff6ff;
+  --accent-bg-strong: #dbeafe;
+  --accent-border-faint: #bfdbfe;
+  --accent-border: #93c5fd;
+  --accent-border-strong: #60a5fa;
+  --sky-bg: #e0f2fe;
+  --info: #0369a1;
+  --heat-lo: #eff4fe;
+  --heat-mid: #93b4f6;
+  --heat-hi: #4b7fe8;
+  --heat-dot-bg: #dbe6fb;
+  --indigo-bg: #eef2ff;
+  --indigo-border: #a5b4fc;
+  --indigo: #6366f1;
+  --indigo-strong: #4f46e5;
+  --indigo-deep: #4338ca;
+  --indigo-bg-faint: #f5f7ff;
+  --violet-bg: #f5f3ff;
+  --violet-ink: #6d28d9;
+  --amber-bg: #fffbeb;
+  --amber-bg-strong: #fef3c7;
+  --amber-border: #fcd34d;
+  --amber-border-strong: #f59e0b;
+  --amber-border-deep: #d97706;
+  --amber-ink: #b45309;
+  --amber-ink-deep: #92400e;
+  --green-bg: #f0fdf4;
+  --green-bg-2: #ecfdf5;
+  --green: #16a34a;
+  --green-ink: #15803d;
+  --green-ink-2: #047857;
+  --rose-bg-faint: #fdf2f8;
+  --rose-bg: #fce7f3;
+  --rose-bg-strong: #fbcfe8;
+  --rose-border: #f9a8d4;
+  --rose-accent: #f472b6;
+  --rose-ink: #be185d;
+  --danger-tint: #fee2e2;
+  --danger-tint-faint: #fef2f2;
+  --danger: #b91c1c;
+  /* Ontology-panel-local danger, matched to colors_to_hex's "Delete" swatch
+     rather than the app-wide red above. */
+  --ont-danger: #ed5d4a;
+  --ont-danger-tint: #f28e80;
+  /* Node-type colours. One hue per type, used by .type-badge, .chip.{type} and
+     .chip.subject.{type} — a concept reads the same colour wherever you meet it. */
+  --type-concept: #FA6610;
+  --type-concept-faint: #FFE8D6;
+  /* Same hue, darkened — TextPrioritized's box outlines. --type-concept ITSELF reads
+     too light/washed-out as a thin 1px line; a darker shade of the same orange keeps
+     it clearly "concept" without the line disappearing into the cream page. */
+  --type-concept-dark: #B84E12;
+  --type-document: #FFD62F;
+  /* The lighter sun, derived from --type-document exactly the way
+     --type-concept-faint is derived from --type-concept: same hue, same
+     saturation, lightness raised to 92%. Used as the reader canvas's document
+     fill, so a document tier reads as its own type at a glance. */
+  --type-document-faint: #FFF7D6;
+  --type-person: #94C7EB;
+  --type-organization: #68CDC4;
+  --type-artifact: #f794dd;
+  --type-source: #b182e8;
+  --warm-bg: #f7f7f5;
+  --warm-border: #ededea;
+  --warm-border-2: #e3e3e0;
+  --warm-bg-2: #ececea;
+  --warm-border-3: #d4d4d4;
+  --warm-border-4: #ccc;
+  --warm-faint: #aaa;
+  --warm-muted: #888;
+  --warm-ink: #666;
+  --warm-ink-2: #52514e;
+  --warm-amber-ink: #8a6d1f;
+  --warm-green-ink: #2d6a4f;
+  --warm-link: #35637d;
+  --warm-danger: #a33;
+  --warm-danger-bg: #f6dede;
+}
+* { box-sizing: border-box; }
+html, body, #root { height: 100%; margin: 0; }
+body {
+  font: 14px/1.5 var(--font-sans);
+  color: var(--ink); background: var(--bg);
+}
+/* Headings were browser-default in five places and hand-sized in two, so the
+   same h2 rendered at three sizes across panels that sit side by side. Sized
+   explicitly here; panels override only where the role genuinely differs
+   (.document-detail h2 is a panel title, .sources-page h3 is a caps rule).
+   Weight too: headings render at the browser's default 700, but 600 is this
+   app's emphasis weight — so a person/org panel title (a plain <h3>) came out
+   heavier than the concept and document panel titles beside it, which are
+   .concept-name inputs at 600. */
+h2, h3, h4 { font-weight: 600; }
+h2 { font-size: var(--text-xl); }
+h3 { font-size: var(--text-lg); }
+h4 { font-size: var(--text-sm); }
+.muted { color: var(--ink-muted); }
+/* One monospace rule for the whole app — it was 11px in .artifact-refs and 12px
+   in .entities-table, which is the same job at two sizes. Mono runs visually
+   large, so --text-sm sits level with 14px body text. */
+.mono { font-family: var(--font-mono); font-size: var(--text-sm); }
+.error { color: var(--danger); margin-left: 12px; cursor: pointer; }
+/* Outcome of a discovery run — informational, so deliberately not the error red. */
+.notice { color: var(--info); margin-left: 12px; cursor: pointer; font-size: var(--text-sm); }
+button {
+  font: inherit; padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border-strong);
+  background: #74BD9F; cursor: pointer; color: #000;
+}
+/* SPECIFICITY TRAP: this selector is (0,2,1). Any class that strips button
+   chrome must reach at least that to override the jade on hover, or its own
+   `background` is silently dead — which is why several text-like buttons were
+   flashing dark jade. Pattern to use: `.thing:hover:not(:disabled)` (0,3,0). */
+button:hover:not(:disabled) { background: #8ecbb0; }
+button:disabled { opacity: .5; cursor: default; }
+
+/* Canonical conventions (Phase 0). Every text field already matches .field's
+   border/radius/type; it's the reusable source of truth for new inputs. Existing
+   inputs keep their own width/padding/resize for context. */
+.field {
+  width: 100%; font: inherit; box-sizing: border-box; padding: 6px 8px;
+  border: 1px solid var(--border-strong); border-radius: var(--radius);
+}
+/* Generic link: accent, underline on HOVER only (never a resting underline).
+   Semantically-coloured links (danger, entity amber, warm Sources) keep their
+   own colour but follow the same hover-underline rule. Bold is for emphasis,
+   not links.
+
+   TWO IDIOMS, and which one applies is decided by the element's shape, not by
+   taste — there were four hover treatments here before, with no rule:
+     inline link  (.link, .link-button, .link-label, .chip-label, bare <a>)
+       -> underline on hover, never a background
+     full-width row (.doc-link, .entity-docs .link-button)
+       -> background tint on hover, never an underline
+   A row that underlines reads as a link that happens to be wide; a link that
+   tints reads as a row you can't quite click. Pick by shape and neither happens. */
+.link {
+  border: none; background: none; padding: 0; font: inherit; cursor: pointer;
+  color: var(--accent); text-decoration: none;
+}
+.link:hover:not(:disabled) { background: none; text-decoration: underline; }
+
+.app { display: flex; flex-direction: column; height: 100%; }
+.topbar {
+  flex: 0 0 auto; padding: 8px 16px; background: var(--surface); display: flex; align-items: center;
+}
+/* The queue is a full-height navigator on the far left, outside the divider. The
+   workspace beside it is the resizable part: documents | ontology. */
+.panes { flex: 1 1 auto; display: flex; min-height: 0; }
+.workspace { flex: 1 1 auto; display: flex; min-width: 0; position: relative; }
+/* `relative` is load-bearing, not tidiness: organization mode's canvas is an
+   absolutely-positioned overlay on THIS box, which is what keeps it off the queue
+   column beside it. See the ORGANIZATION MODE block at the end of this file. */
+
+/* Documents column: viewer on top, details below. The 60/40 split below is just
+   the initial ratio — App.tsx drives the real flex-basis inline via leftTopPct,
+   dragged with .row-divider the same way .divider drives leftPct. */
+.left { display: flex; flex-direction: column; min-width: 0; }
+.left-top { flex: 1 1 60%; display: flex; min-height: 0; }
+.left-bottom { flex: 1 1 40%; overflow: auto; background: var(--surface); }
+
+/* Draggable divider between the left/right panes. */
+.divider {
+  flex: 0 0 6px; cursor: col-resize; background: var(--border);
+  border-left: 1px solid var(--border-strong); border-right: 1px solid var(--border-strong);
+}
+.divider:hover { background: var(--border-strong); }
+
+/* Draggable divider between a column's own top/bottom panes (row-divider).
+   Thinner than .divider — it sits inside a much shorter axis, so a 6px bar reads
+   heavier here than the same weight does as a vertical rule. */
+.row-divider {
+  flex: 0 0 3px; cursor: row-resize; background: var(--border-strong);
+}
+.row-divider:hover { background: var(--ink-faint); }
+
+/* Ontology column: table on top, concept panel below — mirrors the left.
+
+   `flex-basis: 0`, not `auto`, and that is the whole reason the divider stays put.
+   With `auto` the base size is the CONTENT width, and `overflow: hidden` /
+   `text-overflow: ellipsis` don't shrink that — they clip at the final used width,
+   after the size is already decided. So one long document title in the panel below
+   inflated this column's basis and it took space back off the left pane: the
+   divider moved on its own, undoing the drag. At basis 0 the column is exactly the
+   space left over from `.left`'s width, whatever it holds, and long text is left to
+   wrap or ellipsize inside it. */
+.right { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; }
+.right-top { flex: 1 1 60%; min-height: 0; }
+/* `overflow-wrap: anywhere` because a URL or a single long token has no break
+   opportunity of its own, and would overflow a fixed-width column however the
+   panes are sized. */
+.right-bottom {
+  flex: 1 1 40%; overflow: auto; background: var(--surface);
+  overflow-wrap: anywhere;
+}
+
+/* "Review queue" in the app header: the left column takes documents from two
+   sources now, so the queue is something you ask for rather than what the column
+   is. The count stays PENDING wherever you are. */
+.queue-btn {
+  margin-left: 16px; padding: 3px 10px; font-size: var(--text-sm);
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.queue-btn.sel { background: var(--border); border-color: var(--ink-faint); }
+
+/* The + in the review queue header: the queue's second entrance, for a document
+   the curator found in the wild rather than through a search. It sits with the
+   list it acts on — the app header holds guide-wide things.
+
+   The box overlays the workspace instead of sitting in the column: at 220px a URL
+   wrapped three times and the result list was unreadable. `position: fixed` (placed
+   in JS from the button's rect — see ADD_BOX_WIDTH) is what escapes the column's
+   own `overflow: auto`, which would clip an absolutely-positioned child. */
+/* The queue header's two buttons: Organize, then +. One wrapper for both so they
+   travel together to the right edge, and a SEPARATE inner wrapper for + because the
+   add box's click-outside test is `.add-doc-group` — Organize has to count as
+   outside it, or opening one would leave the other's box hanging. */
+.queue-tools { display: inline-flex; align-items: center; gap: 2px; margin-left: auto; }
+.add-doc-group { display: inline-flex; }
+/* Same size and weight as +, and the same `.sel` treatment, because they are the
+   same kind of thing: a mode this column is in. */
+.organize-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 3px 6px; line-height: 1; color: var(--ink-3);
+}
+.organize-btn.sel { background: var(--border); border-color: var(--ink-faint); color: var(--ink); }
+.add-doc-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 1px 7px; font-size: var(--text-base); line-height: 1.2; color: var(--ink-3);
+}
+.add-doc-btn.sel { background: var(--border); border-color: var(--ink-faint); }
+/* One column, one thing per row: heading, then the field, then the buttons, then
+   what happened. Everything is full width — nothing sits beside anything else, so
+   there's no reflow to look wrong at any size. */
+.add-doc-box {
+  position: fixed; z-index: 30; padding: 14px 16px; text-align: left;
+  max-height: 70vh; overflow: auto;
+  display: flex; flex-direction: column; gap: 10px;
+  background: var(--surface); border: 1px solid var(--border-strong); border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, .16);
+}
+.add-doc-head { display: flex; flex-direction: column; gap: 3px; font-size: var(--text-base); }
+.add-doc-head .muted { font-size: var(--text-sm); line-height: 1.45; }
+.add-doc-input {
+  width: 100%; box-sizing: border-box; font-family: inherit; font-size: var(--text-base);
+  padding: 8px; border: 1px solid var(--border-strong); border-radius: 6px; resize: vertical;
+}
+.add-doc-actions { display: flex; gap: 8px; }
+.add-doc-actions .save { font-weight: 600; }
+.add-doc-result { margin: 0; font-size: var(--text-sm); }
+.add-doc-result > li { margin-bottom: 8px; }
+/* One line per URL, clipped: the box reports what happened, it isn't a reading
+   surface — the full string is in the title attribute. */
+.add-doc-item {
+  padding-left: 10px; color: var(--ink-2);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+/* The one item type that isn't plain text: a failed URL carries its "add
+   manually" fallback on the same line, so it needs the row layout the other
+   buckets don't. */
+.add-doc-failed {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 8px; white-space: normal;
+}
+.add-doc-failed-url {
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0;
+}
+.add-doc-failed .link { flex: none; font-size: var(--text-sm); }
+/* The manual-add fallback form, nested in the same box below the failed-URL
+   list it was opened from. Same field layout as the paste box above it. */
+.add-doc-manual {
+  display: flex; flex-direction: column; gap: 10px;
+  padding-top: 10px; border-top: 1px solid var(--border);
+}
+
+/* SCOPE, SOURCES, ENTITIES, ARTIFACTS: sit left of the queue button. Letter-spaced
+   caps so they read as a distinct kind of thing — documents you author, not views
+   you switch to.
+
+   At rest they collapse to their glyphs and overlap into a deck of cards, because
+   four spelled-out words were eating a third of the header for windows you open a
+   few times a day. Hovering anywhere in the deck deals it out: the labels unfurl
+   and the cards separate. Everything to the right slides over — the labels are the
+   point, so they take real space rather than overlaying the queue button.
+
+   :focus-within is not decoration — tabbing through the header has to expand them
+   too, or the labels are unreachable without a mouse. */
+.scope-group { display: inline-flex; align-items: center; margin-left: 16px; gap: 8px; }
+.scope-btn {
+  padding: 6px 12px; font-size: var(--text-xs);
+  letter-spacing: .08em; color: #000;
+  display: inline-flex; align-items: center; white-space: nowrap; gap: 6px;
+  background: #74BD9F; border-radius: 4px; border: none; cursor: pointer;
+}
+.scope-btn:hover:not(:disabled) { background: #8ecbb0; }
+.scope-glyph { flex: 0 0 auto; }
+.scope-label { display: inline; }
+
+/* Curator <-> reader mode switch: shaped like .scope-btn but in the Save blue,
+   since crossing to the other app is closer to a committed action than a link. */
+.view-toggle {
+  margin-left: 8px;
+  padding: 6px 12px; font-size: var(--text-xs); text-transform: uppercase;
+  letter-spacing: .08em; color: #000;
+  display: inline-flex; align-items: center; white-space: nowrap; gap: 6px;
+  background: #1f7ed1; border-radius: 4px; border: none; cursor: pointer;
+  text-decoration: none;
+}
+.view-toggle:hover { background: #1565a8; text-decoration: none; }
+
+/* The scope editor, in its own window. */
+.scope-page { max-width: 70ch; margin: 0 auto; padding: 24px 20px; background: #e4eef5; }
+.scope-page h2 { margin: 0 0 4px; }
+.scope-body {
+  width: 100%; font: inherit; line-height: 1.55; padding: 10px 12px;
+  border: 1px solid var(--border-strong); border-radius: 6px; margin-top: 12px;
+}
+.scope-warn {
+  background: var(--amber-bg); border: 1px solid var(--amber-border); border-radius: 6px;
+  padding: 8px 12px; color: var(--amber-ink-deep); font-size: var(--text-sm);
+}
+.scope-foot { font-size: var(--text-sm); margin-top: 20px; border-top: 1px solid var(--border); padding-top: 12px; }
+
+/* Data-set picker: pushed to the right edge of the header. When it's on the real
+   guide (not the sandbox) it warms to amber — a standing reminder that edits here
+   land in the real thing. */
+/* Right cluster of the header: Undo, then the data-set picker. */
+.topbar-right { margin-left: auto; display: inline-flex; align-items: center; gap: 12px; }
+.undo-btn { font-size: var(--text-sm); padding: 3px 10px; }
+/* Run search: fills the queue from the ontology. Sits beside Undo because that's
+   what reverses it. */
+.scout-btn { font-size: var(--text-sm); padding: 3px 10px; border-radius: 6px 0 0 6px; }
+/* Split control: the caret opens the concept picker. Joined to the button so they
+   read as one thing. */
+.scout-group { position: relative; display: inline-flex; }
+.scout-caret {
+  font-size: var(--text-sm); padding: 3px 6px; border-radius: 0 6px 6px 0; border-left: none;
+}
+.scout-menu {
+  position: absolute; top: 100%; right: 0; z-index: 20; margin-top: 4px;
+  min-width: 260px; max-height: 320px; overflow: auto; padding: 10px;
+  background: var(--surface); border: 1px solid var(--border-strong); border-radius: 8px;
+  box-shadow: 0 6px 20px rgba(15, 23, 42, .12); text-align: left;
+}
+.scout-menu-head {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 8px; margin-bottom: 8px; font-size: var(--text-sm);
+}
+.scout-menu-head button { font-size: var(--text-xs); padding: 2px 8px; }
+.scout-opt {
+  display: flex; align-items: center; gap: 6px; padding: 3px 0;
+  font-size: var(--text-sm); font-weight: 400; cursor: pointer;
+}
+.env-picker { display: inline-flex; align-items: center; gap: 6px; font-size: var(--text-sm); }
+.env-picker select { font-size: var(--text-sm); padding: 2px 6px; }
+.env-picker.live { color: var(--amber-ink); font-weight: 600; }
+.env-picker.live select { border-color: var(--amber-border-strong); background: var(--amber-bg); }
+
+.queue { flex: 0 0 220px; overflow: auto; border-right: 1px solid var(--border); background: var(--surface); padding: 10px; }
+.queue.collapsed { flex: 0 0 40px; padding: 8px 4px; text-align: center; }
+/* Collapsed rail: icon and badge stacked and centered in the 40px column, not
+   laid out inline — inline content (☰ + a pill) is wider than the rail and
+   spills past its right edge instead of centering. */
+.queue.collapsed .collapse-btn {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  width: 100%; padding: 4px 0;
+}
+.collapse-btn { border: none; background: none; padding: 2px 6px; color: var(--ink-muted); }
+.collapse-btn:hover:not(:disabled) { background: var(--border-faint); }
+.queue-head { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; }
+.q-heading {
+  min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  font-size: var(--text-sm);
+}
+/* Both a plain <span> pill and a <button> rely on line-height alone to center
+   their glyph, which drifts at small sizes — flex-centering the content is the
+   robust fix, independent of font metrics. */
+.badge {
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--border); border-radius: 10px; padding: 0 7px; font-size: var(--text-sm);
+}
+.queue ul { list-style: none; margin: 0; padding: 0; }
+/* The rail is on EVERY row, transparent until a segment fills it, so a queue that
+   has been organized and one that hasn't line up the same — the ontology bands do
+   this for the same reason (`.ont-band`). */
+.queue li { padding: 8px; border-radius: 6px; cursor: pointer; margin-bottom: 4px;
+  border-left: 4px solid transparent; }
+
+/* ORGANIZATION MODE'S ONE MARK ON THIS LIST: which pile a row is in. Saturated hue
+   in the rail, a tint of it in the fill — the ontology table's idiom, and the reason
+   row text never changes colour. Both come in as custom properties from
+   DocumentList, so the CASCADE below decides what wins, which an inline background
+   could not.
+
+   The order of the four rules under this one IS the rule, and it reads:
+   green means selected, jade means you just approved it, tint means organized and
+   still waiting, nothing means not yet organized. The rail survives all of them, so
+   a row never stops saying which pile it is in. */
+.queue li.q-seg { background: var(--seg-tint); border-left-color: var(--seg-rail); }
+.queue li:hover { background: #daede5; }
+/* Reviewed in this sitting. Temporary by construction — the server already dropped
+   it from the queue, so this survives only until the next fetch. */
+.queue li.done { background: #daede5; color: var(--ink-muted); }
+/* Multi-selected for drag-to-label. Selected is selected: a marked set and the one
+   open in the viewer are the same green, because they are the same answer to "what
+   am I about to act on" (curator's call, 2026-08-25). The ◉ is what separates them. */
+.queue li.marked { background: #74BD9F; }
+.queue li.sel { background: #74BD9F; }
+.queue li[draggable="true"] { cursor: grab; }
+.q-markhint {
+  font-size: var(--text-xs); color: var(--indigo-deep); background: var(--indigo-bg); border-radius: 6px;
+  padding: 5px 8px; margin-bottom: 6px;
+}
+.queue li.done .q-title { font-weight: 400; }
+.q-done { color: var(--green); }
+.q-title { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.q-sub { font-size: var(--text-sm); }
+
+/* Venue tier on a queue row. The queue is already SORTED by tier, so this badge
+   explains the order rather than ranking anything again — which is why the
+   untiered case prints nothing at all instead of a third label.
+   Deliberately quieter than .type-badge: it sits on every row of a long list, and
+   an all-caps pill per row would compete with the title for the eye.
+   No new colour: the badge is drawn in the existing muted ink of the line it sits
+   on, and is distinguished by its outline alone. The palette is a separate piece
+   of work (RESTYLE_SCOPING.md) and a queue row is the wrong place to open it. */
+.q-venue {
+  font-size: var(--text-badge); border-radius: var(--radius-pill);
+  padding: 1px 6px; margin-right: 5px; white-space: nowrap;
+  border: 1px solid var(--border-faint);
+}
+.node-type { margin-left: auto; font-size: var(--text-sm); }
+
+.viewer { flex: 1 1 auto; overflow: auto; padding: 16px; min-width: 0; background: #fff; border-top: 1px solid var(--border); }
+.viewer-bar { margin-bottom: 12px; }
+.viewer-bar a { color: var(--ink); text-decoration: none; }
+.viewer-bar a:hover { text-decoration: underline; }
+.readable { }
+.readable h2 { font-size: var(--text-xl); }
+/* The paragraph a clicked evidence-table quote jumps to (DocumentViewer.tsx) —
+   pale jade, curator's own choice of color, fading back out via the transition
+   rather than cutting off abruptly when the highlight class is removed. */
+.readable p { transition: background-color 0.6s ease; border-radius: 4px; }
+.readable p.readable-highlight { background-color: var(--green-bg); }
+/* The author's abstract, stored at ingestion. For a paywalled paper this is the
+   whole review surface, so it's set apart rather than mixed into the fetched text. */
+.abstract {
+  margin-bottom: 16px; padding: 10px 12px;
+  background: var(--bg); border-left: 3px solid var(--border-strong); border-radius: 4px;
+}
+.abstract { margin-bottom: 16px; }
+.abstract textarea { width: 100%; margin-top: 4px; }
+
+.details { padding: 16px; }
+.details h3 { margin: 0 0 10px; }
+.meta { margin: 0 0 12px; }
+.meta > div { display: flex; gap: 8px; margin-bottom: 2px; }
+.meta dt { color: var(--ink-muted); width: 90px; flex: 0 0 90px; margin: 0; }
+.meta dd { margin: 0; }
+/* Size pinned, not inherited: this class lands on <label>, <span>, <button> AND
+   <h3> ("Abstract"), so without it the same label renders 14px in most panels
+   and 16px in the two that use a heading. */
+.field-label { display: block; font-size: var(--text-base); font-weight: 600; margin: 12px 0 4px; }
+/* Syntax hint beside a label — present when you need it, quiet when you don't. */
+.field-hint { font-weight: 400; font-size: var(--text-xs); color: var(--ink-muted); margin-left: 6px; }
+/* `input` had NO global rule while textarea and select both did, so any input
+   without a font-setting class fell back to the browser's form font — a
+   different family AND ~13.3px instead of 14px. That was most of the "different
+   fonts" in the entity dialog and the entities search box. Font only: a global
+   width/padding here would break the checkboxes. */
+input { font: inherit; }
+textarea { width: 100%; font: inherit; padding: 8px; border-radius: 6px; border: 1px solid var(--border-strong); resize: vertical; }
+select { width: 50%; font: inherit; padding: 8px; border-radius: 6px; border: 1px solid var(--border-strong); background: #fff; cursor: pointer; }
+select:hover:not(:disabled) { border-color: #74BD9F; background: #daede5; }
+select:focus { outline: none; border-color: #74BD9F; background: #fff; }
+
+.plain-list { list-style: none; margin: 0; padding: 0; }
+.plain-list li {
+  padding: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+/* A document in the concept panel is a way to reach it, not just a label. */
+.doc-link {
+  display: block; width: 100%; text-align: left; border: none; background: none;
+  border-radius: 4px; padding: 3px 4px; font: inherit; color: inherit;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+/* A full-width row, so hover tints the row — see the two-idiom rule at .link. */
+.doc-link:hover:not(:disabled) { background: #daede5; }
+/* A field label that's also a control. Looks like the label it replaces — the
+   affordance is the hover, not a permanent button chrome. */
+.link-label {
+  border: none; background: none; padding: 0; border-radius: 0;
+  font: inherit; font-weight: 600; color: inherit; text-align: left;
+}
+.link-label:hover:not(:disabled) { background: none; text-decoration: underline; }
+.link-label:disabled { opacity: 1; cursor: default; text-decoration: none; }
+
+/* Panel header: title left, Assign right. Used by the concept panel, whose title
+   can be long enough to need the ellipsis. */
+.panel-head { display: flex; align-items: baseline; gap: 12px; margin: 0 0 10px; }
+.panel-head h3 { margin: 0; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.assign { margin-left: auto; flex: 0 0 auto; font-size: var(--text-sm); padding: 4px 10px; white-space: nowrap; }
+
+/* Concept assignment is a search, not a hunt through the table. Results overlay
+   the chips below rather than pushing them down, so the list doesn't jump as you
+   type. */
+.concept-search { position: relative; }
+.concept-search input {
+  width: 100%; font: inherit; padding: 6px 8px; border-radius: 6px;
+  border: 1px solid var(--border-strong);
+}
+.search-results {
+  position: absolute; z-index: 5; left: 0; right: 0; top: 100%; margin: 2px 0 0;
+  padding: 4px; list-style: none; max-height: 210px; overflow: auto;
+  background: #fff; border: 1px solid var(--border-strong); border-radius: 6px;
+  box-shadow: 0 4px 12px rgb(15 23 42 / .10);
+}
+.search-results li { display: block; }
+/* text-align: left is load-bearing — a <button> centres its text by default, and
+   display:flex doesn't override that. A label short enough to sit on one line
+   hides it; a long document title wraps and every line after the first comes out
+   centred. .viewer-search-results button already had this. */
+.search-results button {
+  display: flex; width: 100%; align-items: center; justify-content: space-between;
+  text-align: left; border: none; background: none;
+  border-radius: 4px; padding: 5px 8px; font-size: var(--text-sm);
+}
+.search-results button:hover { background: #daede5; }
+.search-results .no-match { padding: 5px 8px; font-size: var(--text-sm); }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.chip { display: inline-flex; align-items: center; gap: 4px; padding: 2px 6px 2px 10px; border-radius: 12px; font-size: var(--text-sm); border: 1px solid var(--border-strong); }
+.chip.selected { background: var(--type-concept); border: none; box-shadow: inset 0 0 0 1px var(--type-concept); color: #000; }
+/* Proposed concepts: lighter background with dotted border to show they're not yet assigned. */
+.chip.proposed { background: var(--type-concept-faint); border-color: var(--type-concept); color: #000; border-style: dotted; }
+.chip-ok { border: none; background: none; padding: 0 2px; font-size: var(--text-base); line-height: 1; color: #000; cursor: pointer; }
+.chip .chip-ok:hover { background: none; color: #000; }
+/* The label is its own button (opening the concept) beside the ✕ (unassigning it) —
+   siblings, because a button inside a button isn't valid HTML. */
+.chip-label {
+  border: none; background: none; padding: 0; font: inherit; color: inherit;
+  border-radius: 0; cursor: pointer;
+}
+/* No underline here: a chip label is a <span> when it isn't clickable and a
+   <button> when it is (the components are consistent about this), so the
+   underline belongs on button.chip-label alone — see below. Otherwise the
+   person/organization chip on an entity panel underlines like a link and opens
+   nothing. */
+.chip-label:hover:not(:disabled) { background: none; }
+.chip-x { border: none; background: none; padding: 0 2px; font-size: var(--text-base); line-height: 1; display: flex; align-items: center; justify-content: center; color: #000; cursor: pointer; }
+.chip .chip-x:hover { background: none; color: #000; }
+
+/* A chip that isn't a link. Credits don't open anything yet, so the label is a
+   span — but it must sit on the same baseline as the ✕ beside it. */
+span.chip-label { cursor: default; }
+
+/* People and organizations share one Authors field, because sharing one is what
+   an `authored_by` edge does. The colour carries the distinction: cerulean for
+   person, aqua for organization. Both differ from the blue of a concept assignment
+   and the green of a discovery proposal, so no two chip kinds in this panel read
+   as the same thing. */
+.chip.credit.person { background: var(--type-person); border-color: var(--type-person); color: #000; }
+.chip.credit.organization { background: var(--type-organization); border-color: var(--type-organization); color: #000; }
+/* Scraped names awaiting a decision. Dashed like a concept proposal — same
+   meaning, that nothing here is in the graph yet — but tinted by what the name
+   MATCHED, so an accepted proposal lands as the colour it already showed. An
+   unmatched name is grey and offers + rather than ✓: there's nothing to accept,
+   it has to be created first. */
+
+/* "This name is already in the guide." Amber, not red: it's a warning with a
+   legitimate answer on both sides — two people really do share a name — so it
+   informs and offers, rather than blocking. */
+.dup-warn {
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px;
+  margin: 8px 0 0; padding: 8px 10px; font-size: var(--text-sm);
+  background: var(--amber-bg); border: 1px solid var(--amber-border); border-radius: 6px; color: var(--amber-ink-deep);
+}
+.dup-warn .link { padding: 0; border: none; background: none; color: var(--amber-ink);
+  font-size: var(--text-sm); cursor: pointer; }
+.dup-warn .link:hover { text-decoration: underline; }
+
+/* The NEW badge on a scraped author who isn't in the guide yet, and the kind
+   guessed for them. Scraped authors are credited by default, so this is the cue to
+   look twice — nothing else distinguishes a chip the curator chose from one the
+   scraper did. */
+.chip-note {
+  margin-left: 5px; padding: 0 4px; border-radius: 3px;
+  font-size: var(--text-badge); font-weight: 600; letter-spacing: var(--track-caps);
+  background: #74BD9F; color: #000; vertical-align: 1px;
+}
+
+/* The same distinction inside the search results, where two entities may share a
+   name and which one you're picking is the whole difference. */
+.kind-tag {
+  float: right; font-size: var(--text-badge); text-transform: uppercase; letter-spacing: var(--track-caps);
+  padding: 1px 5px; border-radius: 8px; margin-left: 8px;
+}
+.kind-tag.person { background: var(--amber-bg); color: var(--amber-ink); }
+.kind-tag.organization { background: var(--bg-subtle); color: var(--ink-3); }
+
+/* Person or organization — the first thing the creation dialog asks, because it's
+   the one fact a typed name can't carry. */
+.kind-toggle { display: flex; gap: 6px; margin-bottom: 14px; }
+.kind-toggle button { flex: 1; padding: 7px 10px; font-size: var(--text-base); }
+.kind-toggle button.active {
+  background: #5a9d85; border-color: #5a9d85; color: #000;
+}
+
+/* Bibliographic metadata, editable in place. Every field renders whether or not
+   the scrape found anything: an empty box asks to be filled, absence asks nothing. */
+.meta-edit { margin: 0 0 14px; }
+.meta-edit input { width: 100%; font: inherit; padding: 6px 8px; border-radius: 6px; border: 1px solid var(--border-strong); }
+/* Publication and date are short and belong together — side by side they read as
+   one bibliographic line rather than two more stacked fields. */
+.meta-row { display: flex; gap: 10px; }
+.meta-row > div { flex: 1; min-width: 0; }
+/* Set apart from the entity results above it: creating is a different act from
+   picking, and the ellipsis says a dialog follows. */
+.search-results .create-option { color: var(--ink); border-top: 1px solid var(--border); margin-top: 2px; }
+.search-results .create-option:disabled { color: var(--ink-faint); }
+.checkbox-row {
+  display: flex; align-items: center; gap: 7px; margin-top: 10px;
+  font-size: var(--text-sm); color: var(--ink-2);
+}
+.checkbox-row input { width: auto; }
+
+/* Why Save is greyed out, beside the button rather than in a tooltip — a disabled
+   control that doesn't say what it wants reads as broken. */
+.save-blocked { align-self: center; font-size: var(--text-sm); }
+
+.row { display: flex; gap: 8px; margin-top: 8px; }
+.save-row { margin-top: 20px; }
+button.save { background: #1f7ed1; border-color: #1f7ed1; color: #fff; padding: 8px 20px; }
+button.save:hover:not(:disabled) { background: #1565a8; }
+
+/* Ontology table (right pane). One column; rows are concepts. Hue = which root
+   the concept descends from, tint = how deep it sits. See palette.ts. */
+.ont { height: 100%; display: flex; flex-direction: column; background: var(--surface); min-height: 0; }
+.ont-head {
+  flex: 0 0 auto; display: flex; align-items: baseline; gap: 8px; min-width: 0;
+  padding: 10px 12px; background: #e4eef5;
+}
+/* The poly-hierarchy notice lives at the right of the header — plain text, no
+   banner. It changes as you click and needs no dismissing. */
+.ont-alsoin {
+  margin-left: auto; padding-left: 12px; min-width: 0;
+  font-size: var(--text-sm); color: var(--warm-ink-2);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+.ont-notice {
+  flex: 0 0 auto; padding: 7px 12px; font-size: var(--text-sm);
+  background: var(--amber-bg-strong); border-bottom: 1px solid var(--border);
+}
+
+/* Structure-editing controls in the ontology header: + adds, − deletes. */
+.ont-editbtns { display: inline-flex; gap: 2px; }
+.ont-editbtn {
+  width: 24px; height: 24px; padding: 0; line-height: 1; font-size: var(--text-base);
+  display: inline-flex; align-items: center; justify-content: center;
+}
+/* 600, not 700: 700 is reserved for the ontology's selection echo on
+   .ont-cardhead.sel, where weight carries meaning. These are just active buttons. */
+.ont-editbtn.on-add { background: var(--border-strong); border-color: var(--border-strong); color: var(--ink); font-weight: 600; }
+.ont-editbtn.on-delete { background: var(--ont-danger); border-color: var(--ont-danger); color: #fff; font-weight: 600; }
+
+/* The chat toggle: pushed to the header's own right edge via margin-left:auto,
+   which only takes effect when nothing else in the header already claims that
+   auto-margin slot (see .ont-alsoin) — deliberately apart from .ont-editbtns,
+   a different kind of control. Off = white with a jade outline; on = solid
+   jade, same fill as .ont-editbtn.on-add. */
+.chat-toggle {
+  width: 24px; height: 24px; padding: 0; margin-left: auto; line-height: 1;
+  font-size: var(--text-base); display: inline-flex; align-items: center;
+  justify-content: center; background: #fff; color: #000;
+}
+.chat-toggle:hover:not(:disabled) { background: #fff; }
+.chat-toggle.on { background: var(--border-strong); }
+.chat-toggle.on:hover:not(:disabled) { background: var(--border-strong); }
+
+/* The chat shell: replaces both the ontology box and the concept box while
+   open. See App.tsx / components/ChatPane.tsx. */
+.chat-pane { height: 100%; display: flex; flex-direction: column; background: #fff; min-height: 0; }
+.chat-body { flex: 1 1 auto; background: #fff; min-height: 0; display: flex; flex-direction: column; }
+
+.chat-messages {
+  flex: 1 1 auto; min-height: 0; overflow-y: auto;
+  padding: 12px; display: flex; flex-direction: column; gap: 8px;
+}
+.chat-empty { padding: 0 4px; }
+
+/* One bubble per turn. User messages align right (curator's own words, no
+   need to re-read closely); the assistant's align left, wider, since that's
+   the part actually being read. */
+.chat-msg {
+  max-width: 85%; padding: 8px 10px; border-radius: 8px;
+  font-size: var(--text-base); white-space: pre-wrap; word-break: break-word;
+}
+.chat-msg-user {
+  align-self: flex-end; background: var(--border-strong); color: var(--ink);
+}
+.chat-msg-assistant {
+  align-self: flex-start; background: var(--surface); border: 1px solid var(--border);
+}
+/* An assistant reply renders through markdown.tsx now (see .md-body above), whose
+   block elements do their own spacing -- .chat-msg's `pre-wrap`, still wanted for
+   the curator's own plain-text messages, would otherwise turn markdown.tsx's
+   internal line-joins (e.g. a wrapped paragraph) into stray hard line breaks here. */
+.chat-msg-assistant .md-body { white-space: normal; }
+.chat-msg-pending { color: var(--warm-ink-2); }
+
+.chat-error { padding: 0 12px; }
+
+.chat-input-row {
+  flex: 0 0 auto; display: flex; gap: 8px; align-items: flex-end;
+  padding: 10px 12px; border-top: 1px solid var(--border);
+}
+.chat-input { flex: 1 1 auto; margin: 0; }
+.chat-send { flex: 0 0 auto; padding: 8px 16px; }
+
+/* A one-line banner while a structure-edit mode is active. */
+.ont-modehint {
+  flex: 0 0 auto; padding: 6px 12px; font-size: var(--text-sm);
+  background: var(--border-faint); border-bottom: 1px solid var(--border); color: var(--ink);
+}
+.ont-modehint.danger { background: var(--ont-danger-tint); color: var(--ink); }
+
+/* Insertion lines (add mode): a thin, uniform clickable strip between rows. Every
+   line is the same height so the rhythm stays even; the + is faint until hovered,
+   and the label only appears on the line you're aiming at (or the draft's line). */
+.ont-insert {
+  display: flex; align-items: center; gap: 6px; width: 100%;
+  height: 18px; padding: 0 8px; margin: 0;
+  border: none; border-radius: 0; background: none;
+  color: var(--ink); font-size: var(--text-xs);
+}
+.ont-insert:hover:not(:disabled), .ont-insert.active { background: var(--border-faint); color: var(--ink); }
+.ont-insert-plus { flex: 0 0 auto; font-size: var(--text-sm); line-height: 1; }
+.ont-insert-label {
+  min-width: 0; opacity: 0;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.ont-insert:hover .ont-insert-label, .ont-insert.active .ont-insert-label { opacity: 1; }
+
+/* Delete mode: rows read as dangerous to touch. */
+/* .ont-band carries its own hue inline (row.fill) and sits on top of the row's
+   own background, so recoloring the row itself (as below) is invisible — the
+   danger tint has to override the band the same way .ont-cardhead does. */
+.ont-rowlabel.deletable:hover .ont-band { box-shadow: inset 0 0 0 999px var(--ont-danger-tint); filter: none; }
+
+/* Editable concept name in the panel head — an input that doesn't shout "field". */
+.concept-name {
+  font: inherit; font-size: var(--text-lg); font-weight: 600; min-width: 0; flex: 1 1 auto;
+  padding: 4px 6px; border: 1px solid transparent; border-radius: 6px;
+  background: none; color: var(--ink); width: 100%;
+}
+.concept-name:hover { border-color: var(--border); }
+.concept-name:focus { border-color: var(--accent-border); background: var(--surface); outline: none; }
+
+/* Textarea with same editable styling as concept-name. */
+textarea.concept-name { font-size: var(--text-base); font-weight: 400; padding: 8px; min-width: 0; flex: none; resize: vertical; }
+
+/* Organization mode's read-only viewer. The abstract stays a textarea so the box is
+   the same shape in both modes; what goes is everything that OFFERS to be edited —
+   the hover border, the focus ring and fill, the caret. Left alone: the text colour
+   and the scrolling, because it is still there to be read. */
+textarea.concept-name[readonly] { cursor: default; }
+textarea.concept-name[readonly]:hover { border-color: transparent; }
+textarea.concept-name[readonly]:focus { border-color: transparent; background: none; }
+
+.draft-context { margin: 0 0 10px; font-size: var(--text-sm); }
+
+/* Concept panel as a drop target for a dragged document set. */
+.right-bottom { position: relative; }
+.right-bottom.drop-active { outline: 2px dashed var(--indigo); outline-offset: -4px; background: var(--indigo-bg-faint); }
+.drop-hint {
+  position: absolute; inset: auto 0 12px 0; margin: 0 auto; width: fit-content;
+  background: var(--indigo-strong); color: var(--surface); font-size: var(--text-sm); padding: 6px 12px;
+  border-radius: 999px; box-shadow: 0 4px 14px rgba(79, 70, 229, .4); pointer-events: none;
+}
+
+/* Modal — the delete confirmation. */
+.modal-backdrop {
+  position: fixed; inset: 0; background: rgba(15, 23, 42, .45);
+  display: flex; align-items: center; justify-content: center; z-index: 50;
+}
+.modal {
+  background: var(--surface); border-radius: 10px; padding: 20px 22px; max-width: 420px;
+  width: calc(100% - 40px); box-shadow: 0 10px 40px rgba(0, 0, 0, .25);
+}
+.modal h3 { margin: 0 0 12px; }
+/* Accent nudged off red to match the soft-pink danger buttons. */
+.modal.danger { border-top: 4px solid var(--rose-accent); }
+.modal-list { margin: 6px 0 12px; padding-left: 20px; }
+.modal-actions { margin-top: 18px; gap: 10px; }
+/* The confirming note inside a danger dialog — dark pink, so it carries weight
+   without the red the rest of the app has dropped. */
+.danger-note { color: var(--rose-ink); font-weight: 600; }
+/* The dismissal reason, quoted back before the delete goes through. Set on a tinted
+   block rather than in the dialog's body voice because it is the curator's OWN
+   words, not the app's — the same distinction a blockquote draws. */
+.dismiss-reason {
+  background: var(--rose-bg-faint); border-left: 3px solid var(--rose-border);
+  border-radius: 0 4px 4px 0; padding: 8px 10px; margin: 10px 0;
+  font-size: var(--text-sm); color: var(--ink);
+}
+.dismiss-reason em { font-style: normal; font-weight: 600; }
+/* Danger buttons */
+button.danger { background: #ed5d4a; border-color: #ed5d4a; color: #fff; }
+button.danger:hover:not(:disabled) { background: #d74739; }
+/* Danger buttons in tables: text color only, no background */
+td button.danger { background: none; border: none; color: #ed5d4a; padding: 6px 12px; }
+td button.danger:hover { background: none; }
+
+/* Save sits left, delete across from it on the right. */
+.save-row { justify-content: space-between; }
+
+/* Four encodings with no key is unreasonable. Only shown when pivoted — the plain
+   Concepts tab has nothing to decode. */
+.ont-legend {
+  flex: 0 0 auto; display: flex; flex-wrap: wrap; gap: 4px 16px;
+  padding: 6px 12px; border-bottom: 1px solid var(--bg-subtle);
+  font-size: var(--text-xs); color: var(--ink-muted);
+}
+.ont-legend span { display: inline-flex; align-items: center; gap: 5px; }
+.lg-sw {
+  flex: 0 0 auto; width: 18px; height: 14px; border-radius: 2px;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-style: normal; font-size: var(--text-badge);
+}
+.lg-heat { background: linear-gradient(to right, var(--heat-lo), var(--heat-mid), var(--heat-hi)); }
+.lg-dot-sw { background: var(--heat-dot-bg); position: relative; }
+.lg-dot-sw i {
+  position: absolute; top: 2px; right: 2px; width: 4px; height: 4px;
+  border-radius: 50%; background: var(--ink);
+}
+.lg-plain { color: var(--ink-faint); font-variant-numeric: tabular-nums; }
+
+/* Tab bar: which axis the columns represent. UNDER CONSTRUCTION — not rendered
+   while the pivot tabs are off (see OntologyPanel TABS). Kept so restoring them is
+   uncommenting the markup, not rebuilding the styling. */
+.ont-tabs { display: flex; gap: 2px; }
+.ont-tabs button {
+  border: 1px solid transparent; background: none; border-radius: 5px;
+  padding: 2px 8px; font-size: var(--text-sm); color: var(--ink-muted);
+}
+.ont-tabs button:hover:not(:disabled) { background: #daede5; }
+.ont-tabs button.sel { background: #74BD9F; border-color: var(--border-strong); color: var(--ink); }
+
+/* Cards never scroll sideways: every label in them truncates, so a horizontal
+   scrollbar here would only ever mean something has failed to shrink. The pivot
+   grid is the opposite — it is legitimately wider than the pane — so it turns
+   overflow-x back on below. */
+.ont-rows { flex: 1 1 auto; overflow-y: auto; overflow-x: hidden; padding: 8px 12px 16px; }
+/* Pivoted: the grid can be wider than the pane, so the label column has to survive
+   a horizontal scroll. No left padding — the sticky column supplies its own. */
+.ont-rows.pivoted { padding-left: 0; overflow-x: auto; }
+
+/* -- cards -----------------------------------------------------------------
+   One card per root concept. The card is the grouping, which is what pays for
+   everything else here: with a container saying "these belong together", the rows
+   inside no longer need a hairline between them or a rail on each band, and the
+   root's label can go full-bleed instead of hugging its text. A stack of ragged
+   right edges was most of what made the flat list read as unarranged.
+
+   Depth still lives in the tint ramp (palette.fillFor) plus the indent inside the
+   body — the card only absorbs the *first* level, root vs. not. */
+.ont-card {
+  border: none; border-radius: 8px; box-shadow: inset 0 0 0 1px var(--border);
+  background: #fff; overflow: hidden;
+}
+/* Spacing between cards, not inside .ont-rows itself: the pivoted branch shares
+   that box and a flex gap would pull its grid apart. */
+.ont-card + .ont-card { margin-top: 10px; }
+
+/* The head IS the root's click target — same tick gutter, same delete/focus
+   behaviour as any row, just drawn as a bar. It carries the branch hue at the
+   ramp's darkest step, which palette.test.ts certifies against ROW_INK. */
+.ont-cardhead {
+  display: flex; align-items: center; width: 100%; min-width: 0;
+  padding: 7px 8px; margin: 0; border: none; border-left: 4px solid transparent;
+  border-radius: 0; color: var(--ink); font: inherit; font-size: var(--text-base);
+  font-weight: 600; text-align: left;
+}
+.ont-cardhead:hover:not(:disabled) { filter: brightness(0.96); background: none; }
+/* Selection is the tick; weight is its quiet echo, exactly as on a banded row. */
+.ont-cardhead.sel .ont-cardtitle { font-weight: 700; }
+/* Inset, or the card's own overflow:hidden clips it. */
+.ont-cardhead.focus { outline: 2px solid var(--ink); outline-offset: -2px; }
+/* The hue is an inline style (it's per-root), so nothing in a stylesheet can
+   repaint this background. An inset shadow covers it instead — it paints over the
+   background but under the text, so the label stays readable. */
+.ont-cardhead.deletable:hover { box-shadow: inset 0 0 0 999px var(--ont-danger-tint); filter: none; }
+/* min-width:0 is what makes the ellipsis work at all. A flex item defaults to
+   min-width:auto, which refuses to shrink below its own text — so without this the
+   title pushes the head wider than the card instead of truncating, and the pane
+   width follows it. Same trap the pivot column headers document. */
+.ont-cardtitle {
+  min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+/* 12px = the head's 4px rail + its 8px padding, so every tick down the card sits
+   in one column whether it belongs to the root or to a subtopic. */
+.ont-cardbody { padding: 5px 8px 6px 12px; }
+.ont-cardempty { margin: 2px 0 2px 14px; font-size: var(--text-xs); }
+
+/* A new root has no row to hang an insertion line under, so it gets the outline of
+   a card at the end of the stack — where a new root lands once saved. */
+.ont-newroot {
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  width: 100%; margin-bottom: 10px; padding: 10px 8px;
+  border: 1px dashed var(--border); border-radius: 8px; background: #fff;
+  color: var(--ink); font-size: var(--text-xs);
+}
+.ont-newroot:hover:not(:disabled), .ont-newroot.active {
+  background: var(--border-faint); border-color: var(--border-strong); color: var(--ink);
+}
+
+/* The row is a full-width, invisible click target — it gives a generous hit area
+   and carries the depth indent. Nothing about it is coloured. */
+.ont-row {
+  display: flex; align-items: stretch; text-align: left;
+  padding: 0; margin: 0; border: none; background: none; border-radius: 0;
+  color: var(--ink); font-size: var(--text-base); min-width: 0;
+}
+.ont-row:hover:not(:disabled) { background: none; }
+/* A hairline between rows — full width, so it reads as a table rather than as a
+   border on each band. Between only: no line above the first or below the last.
+   Pivot grid only: .ont-row isn't emitted inside a card, where the container does
+   the grouping and a hairline would just compete with the bands. */
+.ont-row + .ont-row { border-top: 1px solid var(--border-faint); }
+
+/* -- the label column ------------------------------------------------------
+   Fixed width so every grid starts at the same x whatever the indent, and sticky
+   so it stays put while the cells scroll under it. */
+.ont-rowlabel {
+  display: flex; align-items: center; width: 100%; min-width: 0;
+  padding: 0; margin: 0; border: none; background: none; border-radius: 0;
+  color: var(--ink); font: inherit; text-align: left;
+}
+.ont-rowlabel:hover:not(:disabled) { background: none; }
+.ont-rows.pivoted .ont-rowlabel {
+  flex: 0 0 240px; min-width: 0; position: sticky; left: 0; z-index: 1;
+  background: var(--surface); padding-right: 6px;
+}
+.ont-rowlabel:hover .ont-band { filter: brightness(0.95); }
+/* Hue is spoken for by the hierarchy, so focus is drawn with shape, not colour.
+   Assignment is shown by the ✓ gutter alone — no border on the band, which would
+   otherwise shift the row's spacing as documents come and go. */
+.ont-rowlabel.sel .ont-band { font-weight: 600; }
+.ont-rowlabel.focus .ont-band { outline: 2px solid var(--ink); outline-offset: -2px; }
+
+/* The row's own document count. An empty cell only means something next to a fat
+   marginal, so the marginals have to be on screen. */
+.ont-rowtotal {
+  margin-left: auto; padding-left: 8px; flex: 0 0 auto;
+  font-size: var(--text-xs); color: var(--ink-muted); font-variant-numeric: tabular-nums;
+}
+
+/* -- column headers --------------------------------------------------------
+   Truncated, not rotated. A column is too narrow for a full concept name either
+   way, so the name lives in the hover instead — and that hover has to LINGER
+   (see HEADER_LINGER_MS): a native title vanishes the moment you move toward the
+   cell you were reading the header for. */
+.ont-colheads { display: flex; position: sticky; top: 0; z-index: 2; background: var(--surface); }
+.ont-corner {
+  flex: 0 0 240px; min-width: 0; position: sticky; left: 0; z-index: 3; background: var(--surface);
+}
+/* min-width:0 at BOTH levels or the column widens to fit its name: .ont-colhead is
+   a flex item of .ont-colheads and .ont-colhead-label is a flex item of that, and
+   each defaults to min-width:auto, which refuses to shrink below its own text and
+   quietly overrules the 64px basis. Miss either one and the header grid drifts out
+   of alignment with the cell grid below it. */
+.ont-colhead {
+  flex: 0 0 64px; min-width: 0;
+  display: flex; align-items: flex-end; padding: 4px 5px 5px;
+  position: relative; border: none; border-bottom: 1px solid var(--border);
+  border-radius: 0; background: none; text-align: left; cursor: pointer;
+}
+.ont-colhead:hover:not(:disabled) { background: var(--bg); }
+/* Disabled only means "no documents to show" — the name still has to be readable
+   and hoverable. */
+.ont-colhead:disabled { opacity: 1; cursor: default; }
+.ont-colhead-label {
+  /* min-width:0 is the whole truncation. A flex item defaults to min-width:auto,
+     which refuses to shrink below its own text — so the label ignores the column's
+     64px basis and spills across the next one. */
+  flex: 1 1 0; min-width: 0;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  font-size: var(--text-xs); color: var(--ink-2);
+}
+/* Hangs BELOW the header rather than above it: the header is sticky inside a
+   scroll box, so anything above it would be clipped by the box's own edge. */
+.ont-colname {
+  position: absolute; top: 100%; left: 0; z-index: 4;
+  margin-top: 2px; padding: 3px 7px; border-radius: 4px;
+  background: var(--ink); color: var(--surface); font-size: var(--text-xs); white-space: nowrap;
+  pointer-events: none; opacity: 1; transition: opacity 400ms ease;
+}
+.ont-colname .muted { color: var(--ink-faint); }
+.ont-colname.fading { opacity: 0; }
+
+/* -- cells -----------------------------------------------------------------
+   Only intersections carry heat (see palette.heatScale). Containment and the
+   diagonal are marginals rather than intersections: they answer a different
+   question, and they run larger, so putting them on the same ramp would let a
+   tautology outshout every real finding. */
+.ont-cell {
+  flex: 0 0 64px; min-width: 0; display: flex; align-items: center; justify-content: center;
+  position: relative; font-size: var(--text-xs); font-variant-numeric: tabular-nums;
+  border-left: 1px solid var(--bg-subtle); min-height: 26px;
+  padding: 0; border-radius: 0; border-top: none; border-right: none; border-bottom: none;
+  color: var(--ink); font-family: inherit;
+}
+/* An empty cell has nothing to open — but it isn't inert information, it's the
+   frontier. So: not clickable, not greyed out either. */
+.ont-cell:disabled { opacity: 1; cursor: default; }
+.ont-cell:hover:not(:disabled) { filter: brightness(0.94); background-color: var(--bg); }
+.ont-cell.active { outline: 2px solid var(--ink); outline-offset: -2px; z-index: 1; }
+/* Containment and the diagonal look identical on purpose: they're one fact. A
+   concept trivially contains itself, so the diagonal is containment's degenerate
+   case — and both mean "some concept's own count", which is not the question the
+   heat answers. Two styles for one meaning is just noise to decode. */
+.ont-cell.containment, .ont-cell.self { color: var(--ink-faint); background: none; }
+/* Heat owns the fill, so the relates_to overlay needs its own channel — the same
+   move the palette makes for selection. A corner dot: the ontology asserts a link
+   here, and the fill says whether the corpus backs it up. */
+.ont-cell.related::after {
+  content: ''; position: absolute; top: 3px; right: 3px;
+  width: 4px; height: 4px; border-radius: 50%; background: var(--ink);
+}
+
+/* The marginals strip: each column's document count, directly under its header. */
+.ont-marginals { border-bottom: 1px solid var(--border); }
+.ont-marginal-label {
+  font-size: var(--text-xs); display: flex; align-items: center; justify-content: flex-end;
+  padding-right: 8px;
+}
+.ont-rows.pivoted .ont-marginal-label {
+  flex: 0 0 240px; position: sticky; left: 0; z-index: 1; background: var(--surface);
+}
+.ont-cell.ont-marginal { color: var(--ink-muted); font-size: var(--text-xs); }
+
+/* The band is the colour: it wraps the label and stops a couple of characters
+   either side of it, rather than filling the row. */
+.ont-band {
+  display: inline-flex; align-items: center; gap: 6px; min-width: 0;
+  padding: 4px 2ch;
+  border-left: 4px solid transparent;   /* transparent on non-roots, so every band still aligns */
+  border-radius: 0;
+}
+/* (hover / sel / focus hang off .ont-rowlabel — the row is now a container for the
+   label plus its cells, and only the label is the concept's click target.) */
+
+/* Fixed gutter outside the band, so ticking a row never resizes its colour. */
+.ont-check { flex: 0 0 14px; font-size: var(--text-sm); line-height: 1; }
+
+/* -- moving a concept between levels ---------------------------------------
+   The wrapper exists only to pair a row with its drag handle and to be the drop
+   target. It must not change the row's box: `display:flex` keeps the button on
+   the same line (as a block it stacked below the grip), and the grip is taken
+   out of flow so no row shifts by a pixel when one appears. */
+.ont-dropwrap { display: flex; align-items: center; position: relative; min-width: 0; }
+.ont-dropwrap > .ont-rowlabel, .ont-dropwrap > .ont-cardhead { flex: 1 1 auto; min-width: 0; }
+
+/* The grip sits in the ✓ gutter — 14px wide on both a banded row and a card
+   head, so one column carries both marks and neither moves the label.
+
+   Faint at rest rather than absent. Hover-only was the first attempt, and it
+   meant nothing on the page ever said a row could be picked up, so the gesture
+   went undiscovered; .25 is enough to notice and not enough to read as a column
+   of furniture down a panel whose job is to be read.
+
+   `left` is set inline per row, from the same indent the row's own padding uses —
+   see gripFor in OntologyPanel. A constant here put every handle in one column
+   while the labels stepped in beneath them. */
+.ont-grip {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  z-index: 2; width: 14px; text-align: center; line-height: 1;
+  font-size: var(--text-sm); color: var(--ink-soft); cursor: grab;
+  opacity: .25; transition: opacity .12s ease;
+}
+/* One gutter, two marks, so only one of them shows at a time. A ticked row keeps
+   its tick and gives up its resting grip; hovering hands the gutter to the grip.
+   Equal specificity to the :hover rule below, so source order decides — hover
+   wins, which is what makes a ticked row still draggable. */
+.ont-dropwrap:has(.sel) .ont-grip { opacity: 0; }
+.ont-dropwrap:hover .ont-grip { opacity: .75; }
+.ont-dropwrap:hover .ont-check { opacity: 0; }
+.ont-grip:hover { opacity: 1; }
+.ont-grip:active { cursor: grabbing; }
+
+/* Somewhere this concept may land. Dashed rather than filled: the row underneath
+   already carries a hue, and a second background would fight it. */
+/* Drop targets carry no mark of their own. Outlining every valid row marked
+   nearly the whole panel, which says nothing, and the ring on the hovered one was
+   a hard black box that pulled the eye off the thing being dragged. The ghost
+   below is the only feedback: it names what is moving and shows the level it
+   lands at, which is the question actually being asked. `.droppable` and `.over`
+   stay on the elements — they still drive which ghost renders, and the tests
+   read them — they just don't paint. */
+
+/* The level cue. A ghost of the dragged concept, drawn one step in from the row
+   it would sit under — so the answer to "which level does this land at" is the
+   indent itself, in the same units every other row uses, rather than a word.
+
+   Positioned, not in flow. In flow it prised the rows below it apart by its own
+   height every time the cursor crossed a row, so the list rippled as you moved
+   down it; floating over the next row costs one row of occlusion and holds the
+   list perfectly still. Opaque for the same reason — it is drawn ON a row. */
+.ont-dropghost {
+  position: absolute; top: 100%; left: 0; right: 0; z-index: 4;
+  display: flex; align-items: center; gap: 6px;
+  padding: 3px 0; font-size: var(--text-xs); color: var(--ink-soft);
+  background: #fff; box-shadow: 0 1px 2px rgba(0, 0, 0, .12);
+  pointer-events: none;   /* never steal the dragover from the row beneath */
+}
+/* Adding a second home rather than moving. Marked in the ghost's own colour as
+   well as its words, because the two drops differ only in what you're holding —
+   there is nothing else on screen to tell them apart. */
+.ont-dropghost.adding { color: var(--ink); }
+.ont-dropghost.adding .ont-dropghost-label { background: var(--border-strong); }
+.ont-dropghost-arrow { flex: 0 0 auto; opacity: .7; }
+.ont-dropghost-label {
+  padding: 1px 6px; border-radius: 4px;
+  background: var(--border-faint); color: var(--ink); font-weight: 600;
+}
+.ont-dropghost-under { opacity: .8; }
+
+/* The drag bar: what is moving, and (for a concept that has a parent) the target
+   that promotes it to the top level.
+
+   Floated over the top of the list rather than inserted above it. It was two
+   boxes pushed into the flow at dragstart — a mode hint and a full padded strip —
+   which shoved the whole ontology down ~40px at the moment the curator was aiming
+   at it. Slim, so it covers as little of the first card as it can. */
+.ont-rowswrap {
+  position: relative; flex: 1 1 auto; min-height: 0;
+  display: flex; flex-direction: column;
+}
+.ont-dragbar {
+  position: absolute; top: 0; left: 0; right: 0; z-index: 8;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  padding: 4px 8px;
+  background: var(--border-faint); color: var(--ink-soft);
+  font-size: var(--text-xs); border-bottom: 1px solid var(--border-strong);
+}
+/* Only a bar that IS a drop target reacts to the cursor; for a concept already at
+   the top level the bar is just a label, and must not look droppable. */
+.ont-dragbar.targetable.over { background: var(--border-strong); color: var(--ink); }
+
+/* min-width:0 for the same reason as .ont-cardtitle: without it the band grows to
+   fit a long concept name and drags the pane out with it. */
+.ont-label { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ont-dup { flex: 0 0 auto; opacity: .55; font-size: var(--text-sm); }
+
+/* --- Sources window (?view=sources) ---------------------------------------
+   Two panes. The right one is deliberately empty for now: the source review
+   queue lands there, and leaving the space reserved shows the left pane at its
+   real width rather than letting it sprawl. */
+.sources-page { display: flex; gap: 24px; padding: 24px; height: 100vh;
+                box-sizing: border-box; font-size: var(--text-base); background: #e4eef5; }
+.sources-left { flex: 1 1 0; min-width: 0; overflow-y: auto; max-width: 640px; }
+.sources-right { flex: 1 1 0; min-width: 0; border-left: 1px dashed var(--warm-border-3);
+                 padding-left: 24px; }
+.sources-page h2 { margin: 0 0 4px; }
+.sources-page h3 { margin: 24px 0 8px; font-size: var(--text-sm); text-transform: uppercase;
+                   letter-spacing: var(--track-caps); color: var(--warm-ink); }
+
+.add-source { margin: 16px 0; padding: 12px; }
+/* Folded into the canonical field convention (was warm #ccc + 4px radius). */
+.add-source input { flex: 1; padding: 6px 8px; font: inherit;
+                    border: 1px solid var(--border-strong); border-radius: var(--radius); }
+.add-source .preview { margin-top: 10px; }
+.add-source .preview .plain-list { margin: 4px 0 10px; }
+
+.source-row { padding: 10px 0; border-bottom: 1px solid var(--warm-border); }
+.source-row.off { opacity: .55; }
+.source-head { display: flex; align-items: center; gap: 8px; }
+.source-toggle { display: flex; align-items: center; gap: 6px; cursor: pointer; }
+.source-url { font-size: var(--text-sm); color: var(--warm-muted); margin: 2px 0 4px 22px;
+              overflow-wrap: anywhere; }
+.source-meta { display: flex; align-items: center; gap: 8px; margin-left: 22px;
+               font-size: var(--text-sm); }
+.source-ran { margin: 4px 0 0 22px; font-size: var(--text-sm); color: var(--warm-green-ink); }
+.source-err { margin: 4px 0 0 22px; font-size: var(--text-sm); color: var(--warm-danger); }
+
+.rate { color: var(--warm-green-ink); }
+.rate.low { color: var(--warm-amber-ink); }
+/* 0% kept is the signal the window exists to surface — a source that has produced
+   only rejects. It should be impossible to skim past. */
+.rate.bad { color: var(--warm-danger); font-weight: 600; }
+
+.tag { font-size: var(--text-xs); padding: 1px 6px; border-radius: 3px;
+       background: #daede5; color: #000; }
+.tag.bad { background: #daede5; color: #000; font-weight: 600; }
+
+.sources-page button.link { background: none; border: none; padding: 0;
+                            color: var(--warm-link); cursor: pointer; font: inherit; }
+.sources-page button.link:hover { text-decoration: underline; }
+.sources-page button.link:disabled { color: var(--warm-faint); cursor: default; text-decoration: none; }
+.add-source .resolved { margin: 0 0 8px; font-size: var(--text-sm); }
+.add-source .resolved code { background: var(--warm-bg-2); padding: 1px 4px;
+                             border-radius: 3px; overflow-wrap: anywhere; }
+
+/* --- Entity card ---------------------------------------------------------
+   The person/organization panel. Tinted to match the chips it's opened from —
+   amber for a person, slate for an organization — so the card and the chip that
+   led to it read as the same object. */
+.node-type.person { color: var(--amber-ink); }
+.node-type.organization { color: var(--ink-3); }
+
+/* Body size, matching the concept panel's document list (.plain-list/.doc-link,
+   which inherit 14px) — the same list of documents shouldn't shrink just because
+   it's reached from an entity instead of a concept. */
+.entity-docs {
+  margin: 2px 0 0; padding-left: 18px;
+  font-size: var(--text-base); color: var(--ink-3); max-height: 140px; overflow-y: auto;
+}
+.entity-docs li { margin: 2px 0; }
+/* Titles are links into the left column, so they take the text colour rather than
+   the muted grey .link-button uses for its quieter jobs. */
+/* Explicitly wrapping, not nowrap: these are full document titles in a column
+   whose width is now fixed by the divider, so they have to fold rather than push. */
+/* Size restated: .link-button sets --text-sm on itself, which beats the size on
+   the parent <ul>, so the titles stayed small without this. */
+.entity-docs .link-button {
+  color: var(--ink-2); font-size: var(--text-base); text-align: left;
+  text-decoration: none; white-space: normal;
+}
+/* Row idiom, not inline: these are full-width wrapping titles in a list, so the
+   hover tints the row instead of underlining the text. */
+.entity-docs .link-button:hover { background: #daede5; text-decoration: none; }
+
+/* The retype control sits apart and below: it's a correction, not a field, and
+   putting it inline would invite clicking it while reading the ones above. */
+.retype { margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--border); }
+.link-button {
+  border: none; background: none; padding: 0;
+  color: var(--ink-muted); font-size: var(--text-sm); cursor: pointer; text-decoration: none;
+}
+/* `:not(:disabled)` is load-bearing, not decoration — without it this loses to
+   `button:hover:not(:disabled)` and the control paints DARK jade. Light jade is
+   the intended tint. */
+.link-button:hover:not(:disabled) { background: var(--border-faint); text-decoration: underline; }
+
+/* A credited chip's label is a button now (it opens the node), so it has to shed
+   the button chrome and keep the chip's own colour. */
+button.chip-label {
+  border: none; background: none; padding: 0; font: inherit; color: inherit;
+  cursor: pointer;
+}
+button.chip-label:hover { background: none; text-decoration: underline; }
+
+/* Not in the guide yet. Deliberately the SAME solid chip as a matched credit:
+   both are equally credited, both are equally removed by their ✕, and a dashed
+   border implied a decision was still outstanding when none is. The NEW badge
+   carries the whole difference. */
+.chip.credit.pending .chip-note { background: #74BD9F; }
+
+/* --- Entities window -----------------------------------------------------
+   Everyone the guide knows about. Same modality as SCOPE and SOURCES: its own
+   window, occasional maintenance, not part of the working columns. */
+.entities-page { max-width: 90ch; margin: 0 auto; padding: 20px; background: #e4eef5; }
+.entities-head { display: flex; align-items: baseline; gap: 12px; }
+.entities-head h2 { margin: 0 8px 0 0; }
+.entities-head .save { margin-left: auto; }
+.entities-controls {
+  display: flex; align-items: center; gap: 12px; margin: 16px 0 10px;
+}
+.entities-controls input { flex: 1 1 auto; padding: 6px 10px; border: 1px solid var(--border-strong); border-radius: 6px; }
+
+.entities-table { width: 100%; border-collapse: collapse; font-size: var(--text-base); }
+.entities-table th {
+  text-align: left; font-size: var(--text-xs); letter-spacing: var(--track-caps); color: var(--ink-muted);
+  border-bottom: 1px solid var(--border); padding: 6px 8px; font-weight: 600;
+}
+.entities-table td { padding: 6px 8px; border-bottom: 1px solid var(--bg-subtle); }
+.entities-table button { background: none; border: none; color: inherit; font-weight: inherit; cursor: pointer; padding: 0; }
+.entities-table button:hover { background: none; }
+.link-button.strong { font-size: var(--text-base); font-weight: 600; color: var(--ink); }
+.danger-link {
+  border: none; background: none; padding: 0; color: var(--danger);
+  font-size: var(--text-sm); cursor: pointer;
+}
+.danger-link:hover:not(:disabled) { background: none; text-decoration: underline; }
+button.save.danger { background: var(--danger); border-color: var(--danger); color: var(--surface); }
+
+/* The note about what this window deliberately can't do. Quiet, at the bottom:
+   it's a plan, not a control. */
+.someday {
+  margin-top: 28px; padding: 12px 14px; border: 1px dashed var(--border-strong);
+  border-radius: 8px; background: var(--bg);
+}
+.someday h4 { margin: 0 0 4px; font-size: var(--text-sm); letter-spacing: var(--track-caps); color: var(--ink-3); }
+.someday p { margin: 0; font-size: var(--text-sm); }
+
+/* Artifacts window — the curator's remarks. List + editor share the page shell with
+   Entities/Scope; the type badge and citation picker are the new pieces. */
+.artifacts-page { max-width: 80ch; margin: 0 auto; padding: 20px; background: #e4eef5; }
+.artifacts-head { display: flex; align-items: baseline; gap: 12px; }
+.artifacts-head h2 { margin: 0 8px 0 0; }
+.artifacts-head .save { margin-left: auto; }
+.artifacts-intro { max-width: 70ch; margin: 8px 0 16px; line-height: 1.5; }
+.artifacts-intro kbd {
+  font-family: inherit; font-size: var(--text-xs); padding: 1px 5px; border: 1px solid var(--border-strong);
+  border-radius: 4px; background: var(--bg);
+}
+
+.artifacts-list { list-style: none; margin: 0; padding: 0; }
+.artifacts-list li { border-bottom: 1px solid var(--bg-subtle); }
+.artifact-row {
+  display: block; width: 100%; text-align: left; background: none; border: none;
+  padding: 12px 8px; cursor: pointer; font-weight: inherit; color: inherit;
+}
+button.artifact-row { background: none; }
+button.artifact-row:hover { background: none; }
+.artifact-row-title { display: block; font-weight: 600; font-size: var(--text-base); color: var(--ink); }
+.artifact-row-subjects { display: inline-flex; flex-wrap: wrap; gap: 5px; margin: 5px 0; }
+.artifact-row-meta { display: block; font-size: var(--text-sm); }
+
+/* One badge for every node type — a remark's subjects mix them, so the label alone
+   ("Misinformation") can't say whether it's the concept or a paper about it. */
+.type-badge {
+  font-size: var(--text-badge); text-transform: uppercase; letter-spacing: var(--track-caps);
+  padding: 1px 6px; border-radius: 8px; margin-right: 6px; white-space: nowrap;
+  border: 1px solid transparent;
+}
+.type-badge.concept      { background: var(--type-concept); color: #000; }
+.type-badge.document     { background: var(--type-document); color: #000; }
+.type-badge.person       { background: var(--type-person); color: #000; }
+.type-badge.organization { background: var(--type-organization); color: #000; }
+.type-badge.source       { display: none; }
+.type-badge.artifact     { display: none; }
+
+
+.artifact-subjects { margin: 6px 0 4px; }
+.chip.subject { padding-left: 6px; }
+.chip.subject .chip-label { cursor: default; }
+.chip.subject.concept { background: var(--type-concept); border-color: var(--type-concept); color: #000; }
+.chip.subject.document { background: var(--type-document); border-color: var(--type-document); color: #000; }
+.chip.subject.person { background: var(--type-person); border-color: var(--type-person); color: #000; }
+.chip.subject.organization { background: var(--type-organization); border-color: var(--type-organization); color: #000; }
+.chip.subject.artifact { background: var(--type-artifact); border-color: var(--type-artifact); color: #000; }
+.chip.subject.source { background: var(--type-source); border-color: var(--type-source); color: #000; }
+/* Entity type chips in the entities list */
+.chip.concept { background: var(--type-concept); border-color: var(--type-concept); color: #000; }
+.chip.document { background: var(--type-document); border-color: var(--type-document); color: #000; }
+.chip.person { background: var(--type-person); border-color: var(--type-person); color: #000; }
+.chip.organization { background: var(--type-organization); border-color: var(--type-organization); color: #000; }
+/* Artifacts and sources had no chip colour at all — they fell through to the bare
+   .chip (transparent, jade border), so they read as an untyped chip rather than as
+   their own kind. */
+.chip.artifact { background: var(--type-artifact); border-color: var(--type-artifact); color: #000; }
+.chip.source { background: var(--type-source); border-color: var(--type-source); color: #000; }
+/* (The two rules that used to sit here — .chip.subject .chip-label:hover and
+   td .chip .chip-label:hover, both cancelling the underline — are redundant now
+   that only button.chip-label underlines. Those labels are spans.) */
+/* Small chips in search results (right-justified) */
+.search-results .chip { padding: 2px 6px; width: fit-content; flex-shrink: 0; }
+
+.artifact-title, .artifact-body {
+  width: 100%; padding: 8px 10px; border: 1px solid var(--border-strong); border-radius: 6px;
+  font: inherit; box-sizing: border-box;
+}
+.artifact-body { line-height: 1.55; resize: vertical; }
+
+.artifact-refs { margin-top: 14px; }
+.artifact-refs ul { list-style: none; margin: 4px 0 0; padding: 0; }
+.artifact-refs li {
+  font-size: var(--text-sm); padding: 3px 0 3px 16px; position: relative; color: var(--ink-2);
+}
+.artifact-refs li::before { content: "“ ”"; position: absolute; left: 0; color: var(--ink-faint); }
+.artifact-refs li.broken { color: var(--danger); }
+.artifact-refs li.broken::before { content: ""; }
+
+.artifact-actions { display: flex; align-items: center; gap: 12px; }
+/* Direct children only: the confirm span holds its own .danger button, which must
+   sit inside the span rather than being flung to the right edge itself. */
+.artifact-actions > .danger,
+.artifact-actions > .confirm-inline { margin-left: auto; }
+/* Hugs Save rather than riding space-between to the far edge — on a NEW remark
+   there's no Delete, so the hint would otherwise sit alone across the panel from
+   the button it's explaining. */
+.artifact-actions > .save-blocked { margin-right: auto; }
+.confirm-inline { display: inline-flex; align-items: center; gap: 8px; font-size: var(--text-sm); }
+
+/* The Cmd+K link picker — a light modal over the editor. */
+.cite-overlay {
+  position: fixed; inset: 0; background: rgba(15, 23, 42, .25);
+  display: flex; align-items: flex-start; justify-content: center; padding-top: 12vh; z-index: 50;
+}
+.cite-dialog {
+  background: var(--surface); border-radius: 10px; padding: 16px; width: min(560px, 92vw);
+  box-shadow: 0 12px 40px rgba(15, 23, 42, .3);
+}
+.cite-head { font-size: var(--text-sm); margin-bottom: 8px; color: var(--ink-2); }
+.cite-dialog input {
+  width: 100%; padding: 8px 10px; border: 1px solid var(--border-strong); border-radius: 6px;
+  font: inherit; box-sizing: border-box;
+}
+.cite-results { position: static; margin-top: 8px; max-height: 46vh; overflow-y: auto; box-shadow: none; }
+/* Badge, then a text column. The shared .search-results row is a space-between flex
+   (one label, one chip at the far end), which threw the title to the right edge the
+   moment a badge joined it — here the row reads left to right instead: what it is,
+   what it's called, and why it turned up. */
+.cite-results button { justify-content: flex-start; gap: 2px; align-items: baseline; }
+.cite-results .type-badge { display: inline-block; flex-shrink: 0; }
+.cite-row { display: block; min-width: 0; }
+/* A remark is a legitimate link target, so it needs the badge the subject picker
+   deliberately hides (nothing remarks on a remark there). Scoped to this list so
+   that stays true where it is true. */
+.cite-results .type-badge.artifact {
+  display: inline-block; background: var(--type-artifact); color: #000;
+}
+.cite-title { display: inline; }
+.cite-src { display: block; font-size: var(--text-xs); margin-top: 1px; }
+/* Why a hit is here when the curator's words aren't in its title, and — for a remark
+   nobody has published — what a reader will get instead. Quiet, one line, never a
+   reason not to pick it. */
+.cite-draft {
+  display: block; font-size: var(--text-xs); margin-top: 1px; color: var(--amber-ink);
+}
+.cite-foot { font-size: var(--text-xs); margin-top: 8px; }
+
+/* Visibility — the reader/curator boundary on a remark. */
+.vis-badge {
+  font-size: var(--text-badge); text-transform: uppercase; letter-spacing: var(--track-caps);
+  padding: 1px 6px; border-radius: 8px; margin-right: 8px; vertical-align: middle;
+}
+.vis-badge.public  { background: var(--green-bg-2); color: var(--green-ink-2); }
+.vis-badge.private { background: var(--bg-subtle); color: var(--ink-muted); }
+
+.vis-control { margin-top: 18px; }
+.vis-label { display: block; margin: 0 0 8px; }
+.publish-toggle {
+  background: #daede5; border: 1px solid #74BD9F; color: #000; padding: 8px 16px; border-radius: 6px; cursor: pointer; font: inherit;
+}
+.publish-toggle.published {
+  background: #5a9d85; border-color: #5a9d85;
+}
+.publish-toggle:hover:not(:disabled) { background: #8ecbb0; border-color: #8ecbb0; }
+.publish-toggle.draft:hover:not(:disabled) { background: #c5e5d7; }
+.vis-hint { display: block; font-size: var(--text-sm); margin-top: 8px; }
+
+
+
+
+
+/* PROSE THAT WAS WRITTEN AS MARKDOWN, wherever it appears. Two sites wear this class —
+   a remark's body in the detail pane, and a document's curator summary above its
+   abstract — because both are the same dialect through the same renderer
+   (markdown.tsx). ONE class rather than a rule per site: they are the same voice, and
+   two rulesets are how the same voice ends up looking like two kinds of writing.
+   Not the curator's `.artifact-body` (that one's a textarea, and sharing it put a form-
+   field border around every published remark). Everything below styles what
+   markdown.tsx renders INSIDE the container — the body arrives as real block elements
+   rather than one run of text. */
+.md-body { line-height: 1.6; font-size: var(--text-base); }
+.md-body > :first-child { margin-top: 0; }
+.md-body > :last-child { margin-bottom: 0; }
+.md-body p { margin: 0 0 10px; }
+/* Two heading tiers, both under the remark's own <h2> title — markdown.tsx collapses
+   #/## and ###/#### into these. h4 sits at body size and earns its rank from the
+   weight, because a third distinct size in a ~360px column reads as noise. */
+.md-body h3 { font-size: var(--text-lg); line-height: 1.3; margin: 16px 0 6px; }
+.md-body h4 { font-size: var(--text-base); margin: 14px 0 4px; }
+.md-body em { font-style: italic; }
+.md-body del { text-decoration: line-through; color: var(--ink-muted); }
+.md-list { margin: 0 0 10px; padding-left: 20px; }
+.md-list li { margin: 0 0 4px; }
+.md-quote { margin: 0 0 10px; padding: 1px 0 1px 10px; color: var(--ink-2);
+  border-left: 2px solid var(--border-faint); }
+.md-quote p { margin: 0; }
+
+/* A table cell can hold a whole paragraph-length quote, so this scrolls sideways
+   (see the app-wide rule against a wide block widening the page) rather than
+   squeezing columns unreadably narrow to fit. */
+.md-table-wrap { overflow-x: auto; margin: 0 0 10px; }
+.md-table { border-collapse: collapse; width: 100%; font-size: var(--text-sm); }
+.md-table th, .md-table td { border: 1px solid var(--border-faint); padding: 6px 8px;
+  text-align: left; vertical-align: top; }
+.md-table th { color: var(--ink-2); font-weight: 600; white-space: nowrap; }
+.md-table td { min-width: 220px; }
+
+/* A link out of a remark. Same idiom as `.cite-link` right above — underline on hover,
+   never at rest — even though the blog these are written for underlines its own links:
+   a resting underline is this app's bug, not its style. The two are deliberately alike
+   in colour; what separates them is where they go, and an external one says so by
+   opening a tab. */
+.md-link { color: var(--border-strong); text-decoration: none; }
+.md-link:hover { color: var(--ink); text-decoration: underline; }
+
+/* A footnote. `<Footnote>…</Footnote>` in the body becomes a numbered superscript that
+   toggles the note open where it stands — the blog's own narrow-viewport behaviour,
+   because the detail pane has no margin to float a margin note into.
+   `all: unset` for the same reason `.cite-link` needs it: an unstyled <button> falls
+   back to the app's jade pill, which mid-sentence reads as broken. The hover rule
+   carries `:not(:disabled)` to clear `button:hover:not(:disabled)`'s specificity. */
+.fn-mark {
+  all: unset; cursor: pointer; font-size: var(--text-xs); font-weight: 600;
+  color: var(--ink-muted); vertical-align: super; line-height: 0; padding: 0 1px;
+}
+.fn-mark:hover:not(:disabled), .fn-mark[aria-expanded='true'] { color: var(--ink); }
+/* `display: block` inside the paragraph, not a sibling of it: the marker sits mid-
+   sentence, so the note has to break out of the line without leaving the <p> it's
+   legal in. */
+.fn-note {
+  display: block; margin: 6px 0; padding: 6px 8px; font-size: var(--text-sm);
+  line-height: 1.5; color: var(--ink-2); background: var(--bg);
+  border-left: 2px solid var(--border);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+.fn-note-n { font-weight: 600; color: var(--ink-muted); }
+
+/* An inline citation inside remark prose: has to read as TEXT, not a button — the
+   generic `button` rule (jade fill, padding, radius) is what every unstyled button in
+   this app falls back to, and that reads as broken sitting mid-sentence. */
+.cite-link {
+  all: unset; cursor: pointer; color: var(--border-strong); text-decoration: none;
+  font: inherit;
+}
+.cite-link:hover:not(:disabled) { background: none; color: var(--ink); text-decoration: underline; }
+
+
+
+/* =========================================================================
+   ORGANIZATION MODE — the segment canvas.
+
+   An overlay over `.workspace` (not over `.panes`): the queue column stays live
+   and its rows stay draggable, because the drags that fill these piles start
+   there. `.workspace` is the positioning context.
+
+   Two layers inside it, and the split matters. `.seg-surface` takes the pan/zoom
+   TRANSFORM on its inner `.seg-plane`, so circles are positioned in canvas
+   coordinates and a stored x/y never depends on the zoom. Everything that has to
+   stay readable — the tools, the roster, the viewer — sits OUTSIDE the plane and
+   is positioned in screen coordinates instead.
+   ========================================================================= */
+.seg-canvas { position: absolute; inset: 0; z-index: 20; }
+.seg-surface {
+  position: absolute; inset: 0; overflow: hidden; cursor: grab;
+  background-color: var(--bg);
+  background-image: radial-gradient(var(--border-faint) 1px, transparent 1px);
+}
+.seg-surface:active { cursor: grabbing; }
+/* Zero-sized: it exists only to carry the transform. Circles are absolutely
+   positioned against it, so their coordinates ARE canvas coordinates. */
+.seg-plane { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
+
+/* A pile. The ontology's idiom — saturated hue in the edge, a tint of it in the
+   fill — so a circle and the queue rows it owns are visibly the same colour, and
+   the ink on both stays one contrast. */
+.seg-circle {
+  position: absolute; border-radius: 50%; cursor: grab;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 2px; text-align: center; padding: 6px; overflow: hidden;
+  background: var(--pile-fill); border: 3px solid var(--pile-rail); color: var(--ink);
+  user-select: none;
+}
+.seg-circle:active { cursor: grabbing; }
+.seg-circle.open { box-shadow: 0 0 0 3px var(--surface), 0 0 0 5px var(--pile-rail); }
+/* Members aren't drawn, so a catch has no feedback until the count ticks over —
+   this is the feedback. */
+.seg-circle.catching { box-shadow: 0 0 0 4px var(--accent-border-strong); }
+.seg-count { font-size: var(--text-xl); font-weight: 600; line-height: 1; }
+.seg-name {
+  font-size: var(--text-sm); line-height: 1.2; max-width: 100%;
+  overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;
+}
+/* Under the circle, not in it: the inside is spoken for by the count and the name,
+   and a note worth writing never fits in one. */
+.seg-note {
+  position: absolute; font-size: var(--text-xs); color: var(--ink-muted);
+  text-align: center; line-height: 1.3; pointer-events: none;
+  overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+}
+
+/* Fixed to the canvas, so they don't pan away. */
+.seg-tools {
+  position: absolute; top: 10px; right: 12px; z-index: 3;
+  display: flex; align-items: center; gap: 8px;
+  background: var(--surface); border: 1px solid var(--border-strong); border-radius: 8px;
+  padding: 5px 8px; box-shadow: 0 4px 14px rgba(15, 23, 42, .12);
+}
+/* Dragged onto the canvas rather than clicked: position is what this canvas is
+   for, so the creating gesture is the one that puts the circle somewhere. */
+.seg-new {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 26px; height: 26px; border-radius: 50%; cursor: grab;
+  border: 2px dashed var(--ink-faint); color: var(--ink-3); font-size: var(--text-lg);
+  line-height: 1; user-select: none;
+}
+.seg-new:hover { border-color: var(--accent); color: var(--accent); }
+.seg-zoom { font-size: var(--text-xs); min-width: 34px; text-align: right; }
+
+/* The roster. Outside the plane and in screen coordinates, so it stays the same
+   size at any zoom — a popover that shrank with the canvas would be unreadable
+   exactly when a pile got big enough to need one. */
+.seg-roster {
+  position: absolute; z-index: 4; width: 260px; max-height: 62%;
+  display: flex; flex-direction: column; gap: 8px; padding: 10px 12px;
+  background: var(--surface); border: 1px solid var(--border-strong); border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, .18);
+}
+.seg-roster-head { display: flex; align-items: center; gap: 4px; }
+.seg-roster-close, .seg-viewer-close {
+  flex: 0 0 auto; padding: 1px 6px; line-height: 1.2; color: var(--ink-3);
+}
+.seg-roster-note { font-size: var(--text-sm) !important; }
+.seg-roster-count { font-size: var(--text-xs); }
+.seg-swatches { display: flex; flex-wrap: wrap; gap: 4px; }
+.seg-swatch {
+  width: 20px; height: 20px; border-radius: 50%; padding: 0;
+  border: 2px solid transparent;
+}
+.seg-swatch:hover:not(:disabled) { border-color: var(--ink-faint); }
+.seg-swatch.sel { border-color: var(--ink); }
+/* Marked, not removed: the ramp already handed out the next unused hue, and this
+   picker is for overriding that. Two piles may share a hue — on a canvas a circle
+   also has a name and a position to tell it apart by. */
+.seg-swatch.taken { opacity: .45; }
+.seg-roster-list { overflow: auto; margin: 0; }
+.seg-roster-list li {
+  padding: 5px 7px; border-radius: 5px; cursor: grab; font-size: var(--text-sm);
+  line-height: 1.3; margin-bottom: 2px;
+  overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+}
+.seg-roster-list li:hover { background: var(--border-faint); }
+/* The same green the queue gives the open row — the two lists behave identically,
+   so they say "this is the one you are reading" the same way. */
+.seg-roster-list li.sel { background: #74BD9F; }
+
+/* The floating read-only viewer, in the docked one's usual top-left position so a
+   pile can be decided on the abstract and not on the title alone. */
+.seg-viewer {
+  position: absolute; left: 12px; top: 10px; z-index: 3;
+  width: min(46%, 560px); max-height: 72%; display: flex; flex-direction: column;
+  background: var(--surface); border: 1px solid var(--border-strong); border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, .18); overflow: hidden;
+}
+.seg-viewer .viewer { overflow: auto; padding: 10px 14px 14px; }
+.seg-viewer-close { position: absolute; right: 6px; top: 6px; z-index: 1; }
+
